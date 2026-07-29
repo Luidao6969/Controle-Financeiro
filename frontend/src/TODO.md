@@ -1,0 +1,6 @@
+- Item 1: Adicionar página de criar receita do mês
+- Item 2: Adicionar página para ver receita de mêses anteriores
+- Item 3: Adicionar página para visualizar gastos de mêses anteriores
+- Item 4: Na página de metas adicionar opção para exluir meta
+- Item 5: Na página de gastos adicionar opção para exluir gastos
+- Item 6: Adicionar página para criar categorias
