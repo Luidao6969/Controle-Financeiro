@@ -1,27 +1,67 @@
 from database.connection import get_connection
 
-def listar_gastos():
+
+def listar_gastos(
+    mes=None,
+    ano=None,
+    categoria_id=None
+):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT 
-            g.id,
-            g.descricao,
-            g.valor,
-            g.data_gasto,
-            c.nome AS categoria
-        FROM gastos g
-        JOIN categorias_gastos c ON c.id = g.categoria_id
-        ORDER BY g.data_gasto DESC
-    """)
+    try:
+        query = """
+            SELECT
+                g.id,
+                g.descricao,
+                g.valor,
+                g.data_gasto,
+                g.categoria_id,
+                c.nome AS categoria_nome,
+                g.observacao,
+                g.criado_em
+            FROM gastos g
+            JOIN categorias_gastos c
+                ON c.id = g.categoria_id
+        """
 
-    gastos = cursor.fetchall()
+        filtros = []
+        parametros = []
 
-    cursor.close()
-    conn.close()
+        if mes is not None:
+            filtros.append("""
+                EXTRACT(MONTH FROM g.data_gasto) = %s
+            """)
+            parametros.append(mes)
 
-    return gastos
+        if ano is not None:
+            filtros.append("""
+                EXTRACT(YEAR FROM g.data_gasto) = %s
+            """)
+            parametros.append(ano)
+
+        if categoria_id is not None:
+            filtros.append("""
+                g.categoria_id = %s
+            """)
+            parametros.append(categoria_id)
+
+        if filtros:
+            query += " WHERE " + " AND ".join(filtros)
+
+        query += """
+            ORDER BY
+                g.data_gasto DESC,
+                g.id DESC;
+        """
+
+        cursor.execute(query, tuple(parametros))
+
+        return cursor.fetchall()
+
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def criar_gasto(data):

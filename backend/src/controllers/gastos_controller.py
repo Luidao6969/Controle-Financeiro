@@ -20,7 +20,6 @@ def get_gastos():
             ano=ano,
             categoria_id=categoria_id
         )
-
         return jsonify(gastos), 200
 
     except ValueError as erro:

@@ -15,8 +15,7 @@ def listar_metas():
                 GREATEST(valor_meta - valor_atual, 0) AS valor_restante,
                 data_inicio,
                 data_limite,
-                concluida,
-                criado_em
+                concluida
             FROM metas
             ORDER BY concluida, data_limite, nome;
         """)
